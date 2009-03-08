@@ -51,7 +51,7 @@ module ThinkingSphinx
       exceptions html_index_attrs html_remove_elements html_strip ignore_chars
       min_infix_len min_prefix_len min_word_len mlock morphology ngram_chars
       ngram_len phrase_boundary phrase_boundary_step preopen stopwords
-      wordforms )
+      wordforms index_exact_words )
         
     attr_accessor :config_file, :searchd_log_file, :query_log_file,
       :pid_file, :searchd_file_path, :address, :port, :allow_star,
