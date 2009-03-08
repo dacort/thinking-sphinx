@@ -23,12 +23,24 @@ module ThinkingSphinx
       return collection
     end
     
-    def self.create_from_results(results, page, limit, options)
+    def self.create_from_results(results, page, limit, options, client = nil)
       collection = self.new(page, limit,
         results[:total] || 0, results[:total_found] || 0
       )
       collection.results = results
       collection.replace instances_from_matches(results[:matches], options)
+      if options[:excerpt] && client
+        Array(options[:excerpt]).each do |field|
+          collection_for_excerpt = collection.select {|entry| entry.respond_to?(field) && entry.send(field)}
+          next if collection_for_excerpt.blank?
+          client.excerpts(:words => options[:words],
+            :index => ThinkingSphinx::Index.name(collection_for_excerpt.first.class.base_class)+"_core",
+            :docs => collection_for_excerpt.map{|entry| entry.send(field)}).
+          each_with_index do |excerpted, i|
+            collection_for_excerpt[i].send("#{field}=", excerpted)
+          end
+        end
+      end
       return collection
     end
     

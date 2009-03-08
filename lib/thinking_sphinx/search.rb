@@ -297,8 +297,10 @@ module ThinkingSphinx
         
           klass   = options[:class]
           page    = options[:page] ? options[:page].to_i : 1
+          
+          options[:words] = query.first
         
-          ThinkingSphinx::Collection.create_from_results(results, page, client.limit, options)
+          ThinkingSphinx::Collection.create_from_results(results, page, client.limit, options, client)
         end
       end
       
